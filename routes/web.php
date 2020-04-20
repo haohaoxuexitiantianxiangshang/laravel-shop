@@ -44,10 +44,18 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::get('payment/{order}/wechat', 'PaymentController@payByWechat')->name('payment.wechat');
 
     Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
-});
 
+});
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
 Route::post('payment/wechat/notify', 'PaymentController@wechatNotify')->name('payment.wechat.notify');
 Route::post('payment/wechat/refund_notify', 'PaymentController@wechatRefundNotify')->name('payment.wechat.refund_notify');
-
 Route::get('products/{product}', 'ProductsController@show')->name('products.show');
+
+
+Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'business', 'namespace' => 'Business'], function () {
+    Route::get('orders', 'OrdersController@index');
+    Route::get('orders/create', 'OrdersController@create');
+
+    Route::get('products', 'ProductsController@index')->name('products.index');
+    Route::get('products/{product}', 'ProductsController@show');
+});
