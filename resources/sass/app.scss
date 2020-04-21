@@ -36,7 +36,7 @@ body {
 }
 
 .footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
@@ -58,7 +58,7 @@ body {
     }
 }
 
-.products-index-page, .products-favorites-page {
+.business-products-index-page, .products-index-page, .products-favorites-page {
     .pagination {
         margin-right: 5px;
     }
@@ -124,6 +124,42 @@ body {
         margin-bottom: 10px;
         border-bottom: 1px solid #eee;
     }
+
+    .skus {
+        & > label {
+            color: #999;
+            font-size: 12px;
+            padding: 0 10px 0 10px;
+        }
+
+        .btn-group {
+            margin-left: -10px;
+
+            label {
+                border-radius: 0 !important;
+                margin: 1px 5px;
+                padding: 2px 5px;
+                font-size: 12px;
+            }
+
+            .btn {
+                border: 1px solid #ccc;
+            }
+
+            .btn.active, .btn:hover {
+                margin-top: 0px !important;
+                background: rgba(241, 54, 54, 0.45) !important;
+                border: 2px solid #e67c7c !important;
+                color: #fff;
+            }
+
+            .btn.focus {
+                outline: 0 !important;
+            }
+        }
+    }
+
+
 }
 
 .products-show-page {
@@ -273,6 +309,60 @@ body {
                 .product_title, .sku_title {
                     text-decoration: line-through;
                 }
+                .warning {
+                    color: red;
+                }
+            }
+        }
+
+        .price {
+            font-size: 12px;
+            font-weight: 700;
+            color: #3c3c3c;
+        }
+
+        input.amount {
+            width: 60px;
+            border-radius: 0 !important;
+        }
+    }
+}
+
+.business-cart-index-page {
+    .card-body {
+        padding: 0 !important;
+    }
+
+    .product_list {
+        .preview {
+            img {
+                max-width: 80px;
+                max-height: 80px;
+            }
+
+            margin-right: 20px;
+        }
+
+        .product_info {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            font-size: 12px;
+
+            .product_title, .sku_title, .warning {
+                display: block;
+            }
+
+            .product_title a {
+                color: #3c3c3c;
+                font-size: 14px;
+            }
+
+            .not_on_sale {
+                .product_title, .sku_title {
+                    text-decoration: line-through;
+                }
+
                 .warning {
                     color: red;
                 }
