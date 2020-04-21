@@ -61,13 +61,25 @@
                         <div class="col-sm-9 col-md-7">
                             <select class="form-control">
                                 <option value="">选择区域</option>
-                                <option value="130102">市区</option>
-                                <option value="130104">西城区</option>
-                                <option value="130105">铜城</option>
-                                <option value="130107">安乐</option>
-                                <option value="130108">大通</option>
-                                <option value="130109">青岚</option>
-
+                                <option value="101">市区东片</option>
+                                <option value="102">市区西片</option>
+                                <option value="201">铜城</option>
+                                <option value="202">杨村</option>
+                                <option value="203">桥田</option>
+                                <option value="301">汊涧</option>
+                                <option value="302">西城区</option>
+                                <option value="303">十八集</option>
+                                <option value="304">石梁</option>
+                                <option value="305">釜山</option>
+                                <option value="401">秦楠</option>
+                                <option value="402">卢龙</option>
+                                <option value="403">仁和</option>
+                                <option value="501">关塘</option>
+                                <option value="502">金集</option>
+                                <option value="503">官桥</option>
+                                <option value="504">郑集</option>
+                                <option value="601">大圹</option>
+                                <option value="602">万寿</option>
                             </select>
                         </div>
                         <div class="form-group">
