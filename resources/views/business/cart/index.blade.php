@@ -23,11 +23,6 @@
                                        value="{{ $item->productSku->id }}" {{ $item->productSku->product->on_sale ? 'checked' : 'disabled' }}>
                             </td>
                             <td class="product_info">
-                                {{--                                    <div class="preview">--}}
-                                {{--                                        <a target="_blank" href="{{ route('products.show', [$item->productSku->product_id]) }}">--}}
-                                {{--                                            <img src="{{ $item->productSku->product->image_url }}">--}}
-                                {{--                                        </a>--}}
-                                {{--                                    </div>--}}
                                 <div @if(!$item->productSku->product->on_sale) class="not_on_sale" @endif>
               <span class="product_title">
                 <a target="_blank"
@@ -59,7 +54,7 @@
 
                         <label class="col-form-label col-sm-3 text-md-right">选择收货地址</label>
                         <div class="col-sm-9 col-md-7">
-                            <select class="form-control">
+                            <select class="form-control" name="area">
                                 <option value="">选择区域</option>
                                 <option value="101">市区东片</option>
                                 <option value="102">市区西片</option>
@@ -84,12 +79,12 @@
                         </div>
                         <div class="form-group">
                             <label class="col-form-label text-md-right col-sm-2">详细地址</label>
-                            <div class="col-sm-9"><input type="text" name="address" value="第8街道第105号"
+                            <div class="col-sm-9"><input type="text" name="address" value=""
                                                          class="form-control"></div>
                         </div>
                         <div class="form-group">
                             <label class="col-form-label text-md-right col-sm-2">电话</label>
-                            <div class="col-sm-9"><input type="text" name="contact_phone" value="13667923443"
+                            <div class="col-sm-9"><input type="text" name="phone" value=""
                                                          class="form-control"></div>
                         </div>
                         <div class="form-group">
@@ -156,10 +151,11 @@
             $('.btn-create-order').click(function () {
                 // 构建请求参数，将用户选择的地址的 id 和备注内容写入请求参数
                 var req = {
-                    address_id: $('#order-form').find('select[name=address]').val(),
+                    address: $('#order-form').find('input[name=address]').val(),
+                    area: $('#order-form').find('select[name=area]').val(),
+                    phone: $('#order-form').find('input[name=phone]').val(),
                     items: [],
                     remark: $('#order-form').find('textarea[name=remark]').val(),
-                    coupon_code: $('input[name=coupon_code]').val(), // 从优惠码输入框中获取优惠码
                 };
                 // 遍历 <table> 标签内所有带有 data-id 属性的 <tr> 标签，也就是每一个购物车中的商品 SKU
                 $('table tr[data-id]').each(function () {
@@ -181,7 +177,7 @@
                         amount: $input.val(),
                     })
                 });
-                axios.post('{{ route('orders.store') }}', req)
+                axios.post('{{ route('business.orders.store') }}', req)
                     .then(function (response) {
                         swal('订单提交成功', '', 'success')
                             .then(() => {
@@ -206,45 +202,6 @@
                         }
                     });
             });
-
-            // 检查按钮点击事件
-            $('#btn-check-coupon').click(function () {
-                // 获取用户输入的优惠码
-                var code = $('input[name=coupon_code]').val();
-                // 如果没有输入则弹框提示
-                if (!code) {
-                    swal('请输入优惠码', '', 'warning');
-                    return;
-                }
-                // 调用检查接口
-                axios.get('/coupon_codes/' + encodeURIComponent(code))
-                    .then(function (response) {  // then 方法的第一个参数是回调，请求成功时会被调用
-                        $('#coupon_desc').text(response.data.description); // 输出优惠信息
-                        $('input[name=coupon_code]').prop('readonly', true); // 禁用输入框
-                        $('#btn-cancel-coupon').show(); // 显示 取消 按钮
-                        $('#btn-check-coupon').hide(); // 隐藏 检查 按钮
-                    }, function (error) {
-                        // 如果返回码是 404，说明优惠券不存在
-                        if (error.response.status === 404) {
-                            swal('优惠码不存在', '', 'error');
-                        } else if (error.response.status === 403) {
-                            // 如果返回码是 403，说明有其他条件不满足
-                            swal(error.response.data.msg, '', 'error');
-                        } else {
-                            // 其他错误
-                            swal('系统内部错误', '', 'error');
-                        }
-                    })
-            });
-
-            // 隐藏 按钮点击事件
-            $('#btn-cancel-coupon').click(function () {
-                $('#coupon_desc').text(''); // 隐藏优惠信息
-                $('input[name=coupon_code]').prop('readonly', false);  // 启用输入框
-                $('#btn-cancel-coupon').hide(); // 隐藏 取消 按钮
-                $('#btn-check-coupon').show(); // 显示 检查 按钮
-            });
-
         });
     </script>
 @endsection

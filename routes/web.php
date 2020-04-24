@@ -63,4 +63,5 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'business', 'nam
     Route::post('cart', 'CartController@add')->name('business.cart.add');
     Route::get('cart', 'CartController@index')->name('business.cart.index');
     Route::delete('cart/{sku}', 'CartController@remove')->name('business.cart.remove');
+    Route::post('orders', 'OrdersController@store')->name('business.orders.store');
 });
