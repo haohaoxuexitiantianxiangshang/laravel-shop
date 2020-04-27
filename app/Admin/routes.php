@@ -26,4 +26,10 @@ Route::group([
     $router->get('coupon_codes/{id}/edit', 'CouponCodesController@edit');
     $router->put('coupon_codes/{id}', 'CouponCodesController@update');
     $router->delete('coupon_codes/{id}', 'CouponCodesController@destroy');
+
+
+    $router->get('business/orders', 'BusinessOrdersController@index')->name('admin.business.orders.index');
+    $router->get('business/orders/{order}', 'BusinessOrdersController@show')->name('admin.business.orders.show');
+    $router->post('business/orders/{order}/ship', 'BusinessOrdersController@ship')->name('admin.business.orders.ship');
+    $router->post('business/orders/{order}/refund', 'BusinessOrdersController@handleRefund')->name('admin.business.orders.handle_refund');
 });
