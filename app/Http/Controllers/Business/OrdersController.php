@@ -28,7 +28,7 @@ class OrdersController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate();
 
-        return view('orders.index', ['orders' => $orders]);
+        return view('business.orders.index', ['orders' => $orders]);
     }
 
 

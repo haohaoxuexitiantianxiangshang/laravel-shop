@@ -17,6 +17,7 @@ class BusinessOrderService
         $order = \DB::transaction(function () use ($user, $address, $remark, $items) {
 
             $order = new Order([
+                'area' => $address['area'],
                 'address' => $address,
                 'remark' => $remark,
                 'total_amount' => 0,
@@ -38,17 +39,22 @@ class BusinessOrderService
                 $item->save();
 
                 $totalAmount += $sku->price * $data['amount'];
+                $totalAmount = round($totalAmount);
 
                 if ($sku->decreaseStock($data['amount']) <= 0) {
                     throw new InvalidRequestException('该商品库存不足');
                 }
-                // 更新订单总金额
-                $order->update(['total_amount' => $totalAmount]);
-                // 将下单的商品从购物车中移除
-                $skuIds = collect($items)->pluck('sku_id')->all();
-                app(CartService::class)->remove($skuIds);
+
             }
 
+            if ($totalAmount <= 100) {
+                throw new InvalidRequestException('商品总价为' . $totalAmount . '低于100元,无法派送');
+            }
+            // 更新订单总金额
+            $order->update(['total_amount' => $totalAmount]);
+            // 将下单的商品从购物车中移除
+            $skuIds = collect($items)->pluck('sku_id')->all();
+            app(CartService::class)->remove($skuIds);
             return $order;
         });
 
