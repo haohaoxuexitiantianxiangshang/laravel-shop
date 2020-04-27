@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="row">
-        <div class="card">
+        <div class="card col-12">
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
@@ -56,25 +56,25 @@
                         <div class="col-sm-9 col-md-7">
                             <select class="form-control" name="area">
                                 <option value="">选择区域</option>
-                                <option value="101">市区东片</option>
-                                <option value="102">市区西片</option>
-                                <option value="201">铜城</option>
-                                <option value="202">杨村</option>
-                                <option value="203">桥田</option>
-                                <option value="301">汊涧</option>
-                                <option value="302">西城区</option>
-                                <option value="303">十八集</option>
-                                <option value="304">石梁</option>
-                                <option value="305">釜山</option>
-                                <option value="401">秦楠</option>
-                                <option value="402">卢龙</option>
-                                <option value="403">仁和</option>
-                                <option value="501">关塘</option>
-                                <option value="502">金集</option>
-                                <option value="503">官桥</option>
-                                <option value="504">郑集</option>
-                                <option value="601">大圹</option>
-                                <option value="602">万寿</option>
+                                <option value="市区东片">市区东片</option>
+                                <option value="市区西片">市区西片</option>
+                                <option value="铜城">铜城</option>
+                                <option value="杨村">杨村</option>
+                                <option value="桥田">桥田</option>
+                                <option value="汊涧">汊涧</option>
+                                <option value="西城区">西城区</option>
+                                <option value="十八集">十八集</option>
+                                <option value="石梁">石梁</option>
+                                <option value="釜山">釜山</option>
+                                <option value="秦楠">秦楠</option>
+                                <option value="卢龙">卢龙</option>
+                                <option value="仁和">仁和</option>
+                                <option value="关塘">关塘</option>
+                                <option value="金集">金集</option>
+                                <option value="官桥">官桥</option>
+                                <option value="郑集">郑集</option>
+                                <option value="大圹">大圹</option>
+                                <option value="万寿">万寿</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -181,7 +181,7 @@
                     .then(function (response) {
                         swal('订单提交成功', '', 'success')
                             .then(() => {
-                                location.href = '/orders/' + response.data.id;
+                                location.href = '/business/orders/';
                             });
                     }, function (error) {
                         if (error.response.status === 422) {

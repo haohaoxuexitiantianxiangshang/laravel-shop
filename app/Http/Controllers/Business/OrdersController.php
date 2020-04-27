@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Exceptions\CouponCodeUnavailableException;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Business\OrderRequest;
-use App\Models\CouponCode;
 use App\Models\Business\Order;
 use App\Models\ProductSku;
-use App\Models\UserAddress;
+use App\Services\BusinessOrderService;
 use App\Services\CartService;
-use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -45,44 +42,20 @@ class OrdersController extends Controller
         return view('cart.index', ['cartItems' => $cartItems, 'addresses' => $addresses]);
     }
 
-    public function store(OrderRequest $request)
+
+    public function store(OrderRequest $request, BusinessOrderService $orderService)
     {
         $user = $request->user();
 
         $request = $request->only('remark', 'address', 'area', 'items', 'phone');
 
-        $order = new Order([
-            'address' => [
-                'address' => $request['address'],
-                'area' => $request['area'],
-                'phone' => $request['phone'],
-            ],
-            'remark' => $request['remark'],
-            'total_amount' => 0,
-        ]);
-        $order->user()->associate($user);
+        $address = [
+            'address' => $request['address'],
+            'area' => $request['area'],
+            'phone' => $request['phone'],
+        ];
 
-        $order->save();
+        return $orderService->store($user, $address, $request['remark'], $request['items']);
 
-        $totalAmount = 0;
-        foreach ($request['items'] as $data) {
-            $sku = ProductSku::find($data['sku_id']);
-            // 创建一个 OrderItem 并直接与当前订单关联
-            $item = $order->items()->make([
-                'amount' => $data['amount'],
-                'price' => $sku->price,
-            ]);
-            $item->product()->associate($sku->product_id);
-
-            $item->productSku()->associate($sku);
-
-            $item->save();
-
-            $totalAmount += $sku->price * $data['amount'];
-            if ($sku->decreaseStock($data['amount']) <= 0) {
-                throw new InvalidRequestException('该商品库存不足');
-            }
-        }
-        return $totalAmount;
     }
 }
