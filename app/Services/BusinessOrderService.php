@@ -39,7 +39,7 @@ class BusinessOrderService
                 $item->save();
 
                 $totalAmount += $sku->price * $data['amount'];
-                $totalAmount = round($totalAmount);
+
 
                 if ($sku->decreaseStock($data['amount']) <= 0) {
                     throw new InvalidRequestException('该商品库存不足');
@@ -47,7 +47,8 @@ class BusinessOrderService
 
             }
 
-            if ($totalAmount <= 100) {
+            $totalAmount = round($totalAmount);
+            if ($totalAmount < 100) {
                 throw new InvalidRequestException('商品总价为' . $totalAmount . '低于100元,无法派送');
             }
             // 更新订单总金额

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\ProductSku;
 class OrderItem extends Model
 {
     protected $fillable = ['amount', 'price', 'rating', 'review', 'reviewed_at'];
