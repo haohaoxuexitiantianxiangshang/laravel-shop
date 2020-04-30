@@ -5,17 +5,17 @@ return [
     /*
      * 站点标题
      */
-    'name' => 'Laravel Shop',
+    'name' => 'shop',
 
     /*
      * 页面顶部 Logo
      */
-    'logo' => '<b>Laravel</b> Shop',
+    'logo' => '<b>shop</b>',
 
     /*
      * 页面顶部小 Logo
      */
-    'logo-mini' => '<b>LS</b>',
+    'logo-mini' => '<b>X</b>',
 
     /*
      * Laravel-Admin 启动文件路径
@@ -42,7 +42,7 @@ return [
     /*
      * Laravel-Admin 页面标题
      */
-    'title' => 'Laravel Shop 管理后台',
+    'title' => '管理后台',
 
     /*
      * 是否使用 https
