@@ -1,5 +1,6 @@
 <footer class="footer">
-    <div class="container">
-        <p class="float-right"><a href="tel:">联系我们</a></p>
-    </div>
+    <ul class="nav nav-pills nav-fill">
+        <li class="nav-item"><a class="nav-link" href="">下单</a></li>
+        <li class="nav-item"><a class="nav-link" href="">历史</a></li>
+    </ul>
 </footer>

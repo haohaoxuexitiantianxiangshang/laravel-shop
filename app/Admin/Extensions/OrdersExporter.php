@@ -19,6 +19,7 @@ class OrdersExporter extends ExcelExporter implements WithMapping
         'created_at' => '下单时间',
         'total_amount' => '总金额',
         'ship_status' => '物流',
+        'remark' => '备注',
         'id' => '商品信息',
     ];
 

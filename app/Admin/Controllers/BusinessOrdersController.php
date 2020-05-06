@@ -13,7 +13,7 @@ use Encore\Admin\Layout\Content;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Encore\Admin\Widgets\Table;
-
+use Encore\Admin\Form;
 use App\Admin\Extensions\OrdersExporter;
 class BusinessOrdersController extends AdminController
 {
@@ -37,6 +37,8 @@ class BusinessOrdersController extends AdminController
 
         $grid->column("address->phone", '电话');
 
+        $grid->column("remark", '备注');
+
         $grid->column('created_at', '下单时间')->sortable();
 
 
@@ -51,15 +53,10 @@ class BusinessOrdersController extends AdminController
             return new Table(['商品名', '规格', '数量', '价格'], $sku->toArray());
         });
 
-        $grid->ship_status('物流')->display(function ($value) {
-            return Order::$shipStatusMap[$value];
-        });
+        $grid->ship_status('物流');
 
         // 禁用创建按钮，后台不需要创建订单
         $grid->disableCreateButton();
-//        $grid->actions(function ($actions) {
-//            $actions->disableEdit();
-//        });
 
         //表单导出
         $grid->exporter(new OrdersExporter());
@@ -83,131 +80,28 @@ class BusinessOrdersController extends AdminController
             ->body(view('admin.business.orders.show', ['order' => Order::find($id)]));
     }
 
-    public function ship(Order $order, Request $request)
+    public function update($id)
     {
-        // 判断当前订单是否已支付
-        if (!$order->paid_at) {
-            throw new InvalidRequestException('该订单未付款');
-        }
-        // 判断当前订单发货状态是否为未发货
-        if ($order->ship_status !== Order::SHIP_STATUS_PENDING) {
-            throw new InvalidRequestException('该订单已发货');
-        }
-        // Laravel 5.5 之后 validate 方法可以返回校验过的值
-        $data = $this->validate($request, [
-            'express_company' => ['required'],
-            'express_no' => ['required'],
-        ], [], [
-            'express_company' => '物流公司',
-            'express_no' => '物流单号',
-        ]);
-        // 将订单发货状态改为已发货，并存入物流信息
-        $order->update([
-            'ship_status' => Order::SHIP_STATUS_DELIVERED,
-            // 我们在 Order 模型的 $casts 属性里指明了 ship_data 是一个数组
-            // 因此这里可以直接把数组传过去
-            'ship_data' => $data,
-        ]);
-
-        // 返回上一页
-        return redirect()->back();
+        return $this->form()->update($id);
     }
 
-
-    public function edit($id, Content $content)
+    public function form()
     {
-        return $content
-            ->header('查看订单')
-            // body 方法可以接受 Laravel 的视图作为参数
-            ->body(view('admin.business.orders.show', ['order' => Order::find($id)]));
+        $form = new Form(new Order);
+        $form->display('id', 'ID');
+        $form->display('no', '订单流水号');
+        $form->display('user.name', '买家');
+        $form->display('created_at', '下单时间');
+        $form->display('total_amount', '总金额');
+        $form->embeds('address', '送货信息', function ($form) {
+            $form->text('address', '地址')->rules('required');
+            $form->text('area', '区域')->rules('required');
+            $form->mobile('phone', '电话');
+        });
+
+        $form->text('remark', '备注');
+
+        return $form;
     }
-
-    public function handleRefund(Order $order, HandleRefundRequest $request)
-    {
-        // 判断订单状态是否正确
-        if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
-            throw new InvalidRequestException('订单状态不正确');
-        }
-        // 是否同意退款
-        if ($request->input('agree')) {
-            // 清空拒绝退款理由
-            $extra = $order->extra ?: [];
-            unset($extra['refund_disagree_reason']);
-            $order->update([
-                'extra' => $extra,
-            ]);
-            // 调用退款逻辑
-            $this->_refundOrder($order);
-        } else {
-            // 将拒绝退款理由放到订单的 extra 字段中
-            $extra = $order->extra ?: [];
-            $extra['refund_disagree_reason'] = $request->input('reason');
-            // 将订单的退款状态改为未退款
-            $order->update([
-                'refund_status' => Order::REFUND_STATUS_PENDING,
-                'extra' => $extra,
-            ]);
-        }
-
-        return $order;
-    }
-
-
-    protected function _refundOrder(Order $order)
-    {
-        // 判断该订单的支付方式
-        switch ($order->payment_method) {
-            case 'wechat':
-                // 生成退款订单号
-                $refundNo = Order::getAvailableRefundNo();
-                app('wechat_pay')->refund([
-                    'out_trade_no' => $order->no, // 之前的订单流水号
-                    'total_fee' => $order->total_amount * 100, //原订单金额，单位分
-                    'refund_fee' => $order->total_amount * 100, // 要退款的订单金额，单位分
-                    'out_refund_no' => $refundNo, // 退款订单号
-                    // 微信支付的退款结果并不是实时返回的，而是通过退款回调来通知，因此这里需要配上退款回调接口地址
-                    'notify_url' => route('payment.wechat.refund_notify'),
-                ]);
-                // 将订单状态改成退款中
-                $order->update([
-                    'refund_no' => $refundNo,
-                    'refund_status' => Order::REFUND_STATUS_PROCESSING,
-                ]);
-                break;
-            case 'alipay':
-                // 用我们刚刚写的方法来生成一个退款订单号
-                $refundNo = Order::getAvailableRefundNo();
-                // 调用支付宝支付实例的 refund 方法
-                $ret = app('alipay')->refund([
-                    'out_trade_no' => $order->no, // 之前的订单流水号
-                    'refund_amount' => $order->total_amount, // 退款金额，单位元
-                    'out_request_no' => $refundNo, // 退款订单号
-                ]);
-                // 根据支付宝的文档，如果返回值里有 sub_code 字段说明退款失败
-                if ($ret->sub_code) {
-                    // 将退款失败的保存存入 extra 字段
-                    $extra = $order->extra;
-                    $extra['refund_failed_code'] = $ret->sub_code;
-                    // 将订单的退款状态标记为退款失败
-                    $order->update([
-                        'refund_no' => $refundNo,
-                        'refund_status' => Order::REFUND_STATUS_FAILED,
-                        'extra' => $extra,
-                    ]);
-                } else {
-                    // 将订单的退款状态标记为退款成功并保存退款订单号
-                    $order->update([
-                        'refund_no' => $refundNo,
-                        'refund_status' => Order::REFUND_STATUS_SUCCESS,
-                    ]);
-                }
-                break;
-            default:
-                // 原则上不可能出现，这个只是为了代码健壮性
-                throw new InternalException('未知订单支付方式：' . $order->payment_method);
-                break;
-        }
-    }
-
 
 }
