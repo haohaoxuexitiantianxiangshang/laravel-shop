@@ -57,9 +57,9 @@ class BusinessOrdersController extends AdminController
 
         // 禁用创建按钮，后台不需要创建订单
         $grid->disableCreateButton();
-        $grid->actions(function ($actions) {
-            $actions->disableEdit();
-        });
+//        $grid->actions(function ($actions) {
+//            $actions->disableEdit();
+//        });
 
         //表单导出
         $grid->exporter(new OrdersExporter());
@@ -113,6 +113,15 @@ class BusinessOrdersController extends AdminController
         return redirect()->back();
     }
 
+
+    public function edit($id, Content $content)
+    {
+        return $content
+            ->header('查看订单')
+            // body 方法可以接受 Laravel 的视图作为参数
+            ->body(view('admin.business.orders.show', ['order' => Order::find($id)]));
+    }
+
     public function handleRefund(Order $order, HandleRefundRequest $request)
     {
         // 判断订单状态是否正确
@@ -142,6 +151,7 @@ class BusinessOrdersController extends AdminController
 
         return $order;
     }
+
 
     protected function _refundOrder(Order $order)
     {
@@ -198,4 +208,6 @@ class BusinessOrdersController extends AdminController
                 break;
         }
     }
+
+
 }

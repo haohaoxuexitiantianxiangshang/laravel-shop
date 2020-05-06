@@ -30,6 +30,7 @@ Route::group([
 
     $router->get('business/orders', 'BusinessOrdersController@index')->name('admin.business.orders.index');
     $router->get('business/orders/{order}', 'BusinessOrdersController@show')->name('admin.business.orders.show');
+    $router->get('business/orders/{order}/edit', 'BusinessOrdersController@edit')->name('admin.business.orders.edit');
     $router->post('business/orders/{order}/ship', 'BusinessOrdersController@ship')->name('admin.business.orders.ship');
     $router->post('business/orders/{order}/refund', 'BusinessOrdersController@handleRefund')->name('admin.business.orders.handle_refund');
 });
