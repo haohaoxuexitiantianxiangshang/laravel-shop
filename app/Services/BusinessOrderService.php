@@ -48,8 +48,8 @@ class BusinessOrderService
             }
 
             $totalAmount = round($totalAmount);
-            if ($totalAmount < 100) {
-                throw new InvalidRequestException('商品总价为' . $totalAmount . '低于100元,无法派送');
+            if ($totalAmount < 88) {
+                throw new InvalidRequestException('商品总价为' . $totalAmount . '低于88元,无法派送');
             }
             // 更新订单总金额
             $order->update(['total_amount' => $totalAmount]);
