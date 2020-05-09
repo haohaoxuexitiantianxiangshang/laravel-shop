@@ -54,15 +54,15 @@ class OrdersExporter extends ExcelExporter implements WithMapping
             $order->total_amount,
             $order->remark,
             $order->ship_status,
-            data_get($goosItemsObject, '涨芝士'),
-            data_get($goosItemsObject, '老酸奶'),
-            data_get($goosItemsObject, '简醇'),
-            data_get($goosItemsObject, '白小纯'),
-            data_get($goosItemsObject, '鲜活牛乳'),
-            data_get($goosItemsObject, '优果酪'),
-            data_get($goosItemsObject, '白小纯燕麦'),
-            data_get($goosItemsObject, '芝芝好莓'),
-            data_get($goosItemsObject, '芝芝好芒')
+            data_get($goosItemsObject, '涨芝士', 0),
+            data_get($goosItemsObject, '老酸奶', 0),
+            data_get($goosItemsObject, '简醇', 0),
+            data_get($goosItemsObject, '白小纯', 0),
+            data_get($goosItemsObject, '鲜活牛乳', 0),
+            data_get($goosItemsObject, '优果酪', 0),
+            data_get($goosItemsObject, '白小纯燕麦', 0),
+            data_get($goosItemsObject, '芝芝好莓', 0),
+            data_get($goosItemsObject, '芝芝好芒', 0)
         ];
 
     }

@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Form;
 use App\Admin\Extensions\OrdersExporter;
+use App\Admin\Actions\Business\Order\BatchShip;
+use App\Admin\Actions\Business\Order\BatchPending;
 class BusinessOrdersController extends AdminController
 {
     use ValidatesRequests;
@@ -68,6 +70,11 @@ class BusinessOrdersController extends AdminController
             $filter->like('area', '地区');
             $filter->like('user.name', '买家');
             $filter->between('created_at', "下单时间")->datetime();
+        });
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new BatchShip());
+            $batch->add(new BatchPending());
         });
         return $grid;
     }
