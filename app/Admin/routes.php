@@ -9,7 +9,7 @@ Route::group([
     'namespace'     => config('admin.route.namespace'),
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
-    $router->get('/', 'BusinessOrdersController@index')->name('admin.business.orders.index');
+    $router->redirect('/', '/admin/business/orders');
     $router->get('users', 'UsersController@index');
     $router->get('products', 'ProductsController@index');
     $router->get('products/create', 'ProductsController@create');

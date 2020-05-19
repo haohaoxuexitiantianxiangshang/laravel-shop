@@ -11,8 +11,8 @@
                         <div class="card ">
                             <div class="card-header">
                                 <p>订单号：{{ $order->no }}</p>
-                                <p>地区：{{ $order->area}}</p>
-                                <p class="small">时间{{ $order->created_at->format('Y-m-d H:i:s') }}</p>
+                                <p>地址：{{ $order->area}} {{ $order->address}}</p>
+                                <p class="small">时间:{{ $order->created_at->format('Y-m-d H:i:s') }}</p>
                             </div>
                             <div class="card-body">
                                 <table class="table">

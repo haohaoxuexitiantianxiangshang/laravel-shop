@@ -46,15 +46,9 @@ class OrdersController extends Controller
     {
         $user = $request->user();
 
-        $request = $request->only('remark', 'address', 'area', 'items', 'phone');
+        $request = $request->only('remark', 'address', 'area', 'phone', 'items');
 
-        $address = [
-            'address' => $request['address'],
-            'area' => $request['area'],
-            'phone' => $request['phone'],
-        ];
-
-        return $orderService->store($user, $address, $request['remark'], $request['items']);
+        return $orderService->store($user, $request);
 
     }
 }

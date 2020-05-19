@@ -41,15 +41,15 @@ class OrdersExporter extends ExcelExporter implements WithMapping
 
         foreach ($goosItems as $item) {
             $productName = $item->product->title;
-            $productSkuName = $item->productSku->title;
+            //$productSkuName = $item->productSku->title;
             $goosItemsObject->$productName = $item->amount;
         }
         return [
             $order->no,
             data_get($order, 'user.name'),
             $order->area,
-            $order->address['address'],
-            $order->address['phone'],
+            $order->address,
+            $order->phone,
             $order->created_at,
             $order->total_amount,
             $order->remark,

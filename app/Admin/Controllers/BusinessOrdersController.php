@@ -17,6 +17,7 @@ use Encore\Admin\Form;
 use App\Admin\Extensions\OrdersExporter;
 use App\Admin\Actions\Business\Order\BatchShip;
 use App\Admin\Actions\Business\Order\BatchPending;
+
 class BusinessOrdersController extends AdminController
 {
     use ValidatesRequests;
@@ -35,9 +36,9 @@ class BusinessOrdersController extends AdminController
 
         $grid->area('地区')->sortable();
 
-        $grid->column("address->address", '地址');
+        $grid->column("address", '地址');
 
-        $grid->column("address->phone", '电话');
+        $grid->column("phone", '电话');
 
         $grid->column("remark", '备注');
 
@@ -102,12 +103,10 @@ class BusinessOrdersController extends AdminController
         $form->display('user.name', '买家');
         $form->display('created_at', '下单时间');
         $form->display('total_amount', '总金额');
-        $form->embeds('address', '送货信息', function ($form) {
-            $form->text('address', '地址')->rules('required');
-            $form->text('area', '区域')->rules('required');
-            $form->mobile('phone', '电话');
-        });
 
+        $form->text('address', '地址')->rules('required');
+        $form->text('area', '区域')->rules('required');
+        $form->mobile('phone', '电话');
         $form->text('remark', '备注');
 
         return $form;

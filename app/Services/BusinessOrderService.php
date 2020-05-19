@@ -11,20 +11,22 @@ use Carbon\Carbon;
 
 class BusinessOrderService
 {
-    public function store(User $user, $address, $remark, $items)
+    public function store(User $user, $request)
     {
         // 开启一个数据库事务
-        $order = \DB::transaction(function () use ($user, $address, $remark, $items) {
+        $order = \DB::transaction(function () use ($user, $request) {
 
             $order = new Order([
-                'area' => $address['area'],
-                'address' => $address,
-                'remark' => $remark,
+                'area' => $request['area'],
+                'address' => $request['area'],
+                'phone' => $request['phone'],
+                'remark' => $request['remark'],
                 'total_amount' => 0,
             ]);
             $order->user()->associate($user);
             $order->save();
             $totalAmount = 0;
+            $items = $request['items'];
             foreach ($items as $data) {
                 $sku = ProductSku::find($data['sku_id']);
                 // 创建一个 OrderItem 并直接与当前订单关联
