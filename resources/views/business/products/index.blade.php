@@ -12,27 +12,11 @@
                                 <div class="product-content">
                                     <div class="top">
                                         <div class="img">
-                                            <a href="{{ route('products.show', ['product' => $product->id]) }}">
                                                 <img src="{{ $product->image_url }}" alt="">
-                                            </a>
                                         </div>
                                         <div class="title">
                                             <span>{{ $product->title }}</span>
                                         </div>
-                                        {{--                                        @foreach($product->skus as $sku)--}}
-                                        {{--                                            <div class="form-check">--}}
-
-                                        {{--                                                <label class="sku-btn "--}}
-                                        {{--                                                     data-price="{{ $sku->price }}"--}}
-                                        {{--                                                     data-stock="{{ $sku->stock }}"--}}
-                                        {{--                                                     data-toggle="tooltip"--}}
-                                        {{--                                                     title="{{ $sku->description }}"--}}
-                                        {{--                                                     data-placement="bottom">--}}
-                                        {{--                                                    <input class="form-check-input" type="radio" name="skus-{{$product->id}}" autocomplete="off" value="{{ $sku->id }}">--}}
-                                        {{--                                                   <span>{{ $sku->title }}</span> <span class="price" style="font-size: 1em;"><b>￥</b>{{  $sku->price }}</span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        @endforeach--}}
                                         <div class="skus">
                                             <label>选择</label>
                                             <div class="btn-group btn-group-toggle btn-group-vertical"
@@ -63,7 +47,8 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="float-right">{{ $products->appends($filters)->render() }}</div>
+                    <div class="float-right">{{ $products->render() }}</div>
+
                 </div>
             </div>
         </div>

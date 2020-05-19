@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class BatchShip extends BatchAction
 {
-    public $name = '批量发货';
+    public $name = '发货';
 
     public function handle(Collection $collection)
     {
         foreach ($collection as $model) {
-            $model->ship_status = 'Shipped';
+            $model->ship_status = '已发货';
             $model->save();
         }
 

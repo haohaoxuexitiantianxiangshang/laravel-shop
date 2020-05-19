@@ -11,7 +11,8 @@
                         <div class="card ">
                             <div class="card-header">
                                 <p>订单号：{{ $order->no }}</p>
-                                <p class="small">{{ $order->created_at->format('Y-m-d H:i:s') }}</p>
+                                <p>地区：{{ $order->area}}</p>
+                                <p class="small">时间{{ $order->created_at->format('Y-m-d H:i:s') }}</p>
                             </div>
                             <div class="card-body">
                                 <table class="table">
@@ -27,10 +28,6 @@
                                         <tr>
                                             <td class="product-info">
                                                 <div>
-                                                            <span class="product-title">
-                                                               <a target="_blank"
-                                                                  href="{{ route('products.show', [$item->product_id]) }}">{{ $item->product->title }}</a>
-                                                            </span>
                                                     <span class="sku-title">{{ $item->productSku->title }}</span>
                                                 </div>
                                             </td>

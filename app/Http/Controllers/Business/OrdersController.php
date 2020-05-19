@@ -27,7 +27,6 @@ class OrdersController extends Controller
             ->where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
         return view('business.orders.index', ['orders' => $orders]);
     }
 

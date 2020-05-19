@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class BatchPending extends BatchAction
 {
-    public $name = '批量未发货';
+    public $name = '未发货';
 
     public function handle(Collection $collection)
     {
         foreach ($collection as $model) {
-            $model->ship_status = 'Pending';
+            $model->ship_status = '未发货';
             $model->save();
         }
 

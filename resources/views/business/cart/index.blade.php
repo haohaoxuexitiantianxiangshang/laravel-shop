@@ -24,10 +24,7 @@
                             </td>
                             <td class="product_info">
                                 <div @if(!$item->productSku->product->on_sale) class="not_on_sale" @endif>
-              <span class="product_title">
-                <a target="_blank"
-                   href="{{ route('products.show', [$item->productSku->product_id]) }}">{{ $item->productSku->product->title }}</a>
-              </span>
+
                                     <span class="sku_title"
                                           style="color: #e9876c;">{{ $item->productSku->title }}</span>
                                     @if(!$item->productSku->product->on_sale)

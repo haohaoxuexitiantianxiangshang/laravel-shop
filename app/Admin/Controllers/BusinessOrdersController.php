@@ -62,7 +62,9 @@ class BusinessOrdersController extends AdminController
 
         //表单导出
         $grid->exporter(new OrdersExporter());
+
         $grid->filter(function ($filter) {
+            $filter->like('ship_status', '运输状态')->select(['未发货' => '未发货', '已发货' => '已发货']);
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
             // 在这里添加字段过滤器
